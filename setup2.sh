@@ -22,6 +22,13 @@ mkdir -p ~/.vnc
 cat << EOF > ~/.vnc/xstartup
 #!/bin/sh
 set -x
+pulseaudio --start --exit-idle-time=-1 --log-target=file:/tmp/pulseaudio.log
+sleep 1
+
+pactl load-module module-null-sink sink_name=VirtualSink sink_properties=device.description="Virtual_Sink"
+pactl set-default-sink VirtualSink
+pactl set-default-source VirtualSink.monitor
+
 exec dbus-launch --exit-with-session startxfce4
 EOF
 
